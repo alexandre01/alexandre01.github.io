@@ -1,0 +1,27 @@
+---
+layout: default
+---
+
+<div class="home">
+  {%- if page.title -%}
+    <h1 class="page-heading">{{ page.title }}</h1>
+  {%- endif -%}
+
+  <h2 class="project-list-heading">Selected projects</h2>
+
+  <div class="row project-list">
+    {%- for project in site.projects -%}
+    <a href="{{ project.url | relative_url }}">
+      <div class="col-sm-6 project-cell">
+        <h3>{{ project.title | escape }}</h3>
+        <div class="project-image">
+          <img src="{{ site.baseurl }}/images/{{ project.image }}">
+        </div>
+      </div>
+    </a>
+    {%- endfor -%}
+  </div>
+
+  {{ content }}
+
+</div>

@@ -1,0 +1,23 @@
+---
+layout: default
+---
+<article class="project">
+
+  <h1 class="project-title">{{ page.title | escape }}</h1>
+
+  {%- if page.output -%}
+  <img src="{{ site.baseurl }}/images/{{ page.image }}">
+  {%- endif -%}
+
+  <div class="project-content">
+    {{ content }}
+  </div>
+
+  GitHub: <a href="{{ site.github_base }}/{{ page.github }}">{{ page.github }}</a>
+
+  {%- if site.disqus.shortname -%}
+    {%- include disqus_comments.html -%}
+  {%- endif -%}
+
+  <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
+</article>
