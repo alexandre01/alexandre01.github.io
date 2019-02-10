@@ -1,40 +1,52 @@
 .project-list {
-  margin-top: 1.5em;
+	margin-top: 1.5em;
 
-  a {
-    text-decoration: none;
-    color: $grey-color-dark;
-  }
+	a {
+		text-decoration: none;
+		color: $grey-color-dark;
+	}
+}
+
+.project-links {
+	margin-left: 10px;
 }
 
 .project-cell {
-  background-color: gainsboro;
-  padding: 0;
-  border-radius: 4px;
+	background-color: rgba(127, 151, 166, 0.28); //gainsboro;
+	padding: 0;
+	border: 10px solid transparent;
+	border-radius: 15px;
+	background-clip: padding-box;
+	height: 250px;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
 
-  > h3 {
-    margin: 0.5em;
-    font-size: 1.4em;
-  }
+	> h3 {
+		margin: 0.5em;
+		font-size: 1.4em;
+		color: $grey-color-dark;
+	}
 }
 
 .project-image {
-  text-align: center;
-  height: 200px;
-  overflow: hidden;
+	text-align: center;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
-  > img {
-    max-width: none !important;
-    width: 100%;
-    margin: 0 -100%;
-    transition: width 200ms;
-  }
+	> img {
+		max-width: none !important;
+		width: 100%;
+		transition: width 200ms;
+	}
 
-  &:hover img {
-    width: 110%;
-  }
+	&:hover img {
+		width: 105%;
+	}
 }
 
 .project-content {
-  margin-top: 1em;
+	margin-top: 1em;
 }

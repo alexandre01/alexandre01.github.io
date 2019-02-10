@@ -3,8 +3,7 @@ layout: project
 title: Physically-based 3D renderer in C++
 author: Alexandre Carlier
 image: SSS_teapot_mix.png
-output: false
-github: 3Drenderer
+show_image: false
 ---
 
 In this project, I wrote a complete 3D renderer in C++ and extended it with advanced features including image-based lighting and Subsurface scattering. Please find below my work in the context of the EPFL rendering competition from the course [CS-440: Advanced Computer Graphics](https://rgl.epfl.ch/courses/ACG18).
@@ -77,7 +76,7 @@ I understood the subject "The Last One" as an environmental message: global warm
 
 As a consequence, they might be the last ones in a near future if no measure against climate change is taken.
 
-![](/images/polar-bear.jpg)
+![](/images/3drenderer/polar-bear.jpg)
 
 Implemented features
 ====================
@@ -101,20 +100,20 @@ We then define the subclasses `ConstTexture` and `ImageTexture` (see `texture_co
 Below, we compare the resulting rendering when applying an image texture in Blender and in Nori (all the Blender and XML files can be found in the `scenes/final/texture/validation` folder).
 
 <div class="twentytwenty-container">
-    <img src="/images/texture_plane_blender_ref.png" alt="Blender reference" />
-    <img src="/images/texture_plane.png" alt="Mine" />
+    <img src="/images/3drenderer/texture_plane_blender_ref.png" alt="Blender reference" />
+    <img src="/images/3drenderer/texture_plane.png" alt="Mine" />
 </div>
 
 <div class="twentytwenty-container">
-    <img src="/images/texture_bunny_blender_ref.png" alt="Blender reference" />
-    <img src="/images/texture_bunny.png" alt="Mine" />
+    <img src="/images/3drenderer/texture_bunny_blender_ref.png" alt="Blender reference" />
+    <img src="/images/3drenderer/texture_bunny.png" alt="Mine" />
 </div>
 
 Applying it to a parquet texture, we get:
 
 <div class="side-by-side">
-    <div><img src="/images/texture_parquet.png" /></div>
-    <div><img src="/images/texture_bunny_parquet.png" /></div>
+    <div><img src="/images/3drenderer/texture_parquet.png" /></div>
+    <div><img src="/images/3drenderer/texture_bunny_parquet.png" /></div>
 </div>
 _Parquet texture applied to the floor (`scenes/final/texture/parquet`)_
 
@@ -129,8 +128,8 @@ We add the method `BSDF::bump(Intersection *its, Texture<float> *bumpMap)` which
 
 
 <div class="twentytwenty-container">
-    <img src="/images/texture_bunny_parquet.png" alt="Without bumpmap" />
-    <img src="/images/bumpmap_bunny_parquet.png" alt="With bumpmap" />
+    <img src="/images/3drenderer/texture_bunny_parquet.png" alt="Without bumpmap" />
+    <img src="/images/3drenderer/bumpmap_bunny_parquet.png" alt="With bumpmap" />
 </div>
 _Bumpmap added to the parquet (`scenes/final/bumpmap/parquet`)_
 
@@ -142,9 +141,9 @@ Code:
 In just a few lines of code, we can extend Nori to simulate depth of field. I extended the Nori exporter Blender plugin by computing the distance between the in-focus object of Blender and the camera position to fill the `focalDistance` parameter.
 
 <div class="twentytwenty-container">
-    <img src="/images/dof_radius_002.png" alt="Radius: 0.02" />
-    <img src="/images/dof_radius_005.png" alt="Radius: 0.05" />
-    <img src="/images/dof_radius_010.png" alt="Radius: 0.10" />
+    <img src="/images/3drenderer/dof_radius_002.png" alt="Radius: 0.02" />
+    <img src="/images/3drenderer/dof_radius_005.png" alt="Radius: 0.05" />
+    <img src="/images/3drenderer/dof_radius_010.png" alt="Radius: 0.10" />
 </div>
 _Comparing different radius values for the depth of field feature (`scenes/final/dof`)_
 
@@ -172,13 +171,13 @@ For the parser, we use the lightweight [TinyExpr](https://github.com/codeplea/ti
 
 Some examples from `scenes/final/geometry_mix`:
 
-![](/images/geometry_z.png)
+![](/images/3drenderer/geometry_z.png)
 *Mix BSDF using the formula $z$*
 
-![](/images/geometry_sin.png)
+![](/images/3drenderer/geometry_sin.png)
 *Mix BSDF using the formula $\frac{1}{2} (\sin(2 \pi x 4) + 1)$*
 
-![](/images/geometry_sigmoid_sinx.png)
+![](/images/3drenderer/geometry_sigmoid_sinx.png)
 *Mix BSDF using the formula $\frac{1}{1 + exp(-1000  (z - 0.5 + 0.03 \sin(2 \pi x 8) ))}$*
 
 Ray-intersection involving non-triangular shapes (20 points)
@@ -192,7 +191,7 @@ In order to render the polar bear's fur efficiently, we implement the curve prim
 
 We start by implementing the simple `Sphere` primitive (see `sphere.cpp`) defined by its center and radius.
 
-![](/images/sphere.png)
+![](/images/3drenderer/sphere.png)
 *A scene using the `Sphere` primitive (see `scenes/final/sphere`)*
 
 We then implement the `Curve` primitive. The underlying Bézier curve is defined by 4 control points $p_{0}$, $p_{1}$, $p_{2}$ and $p_{3}$ and is parametrized by $u \in [0, 1]$:
@@ -201,7 +200,7 @@ $$p(u) = (1-u)^{3}p_{0} + 3(1-u)^{2}up_{1} + 3(1-u)u^{2}p_2 + u^{3}p_{3}$$
 
 Since our main goal is to apply it to the fur of a polar bear that is short, we can simplify a little the approach in the PBRT book (in particular we can store the full curve directly instead of splitting it in smaller pieces; however, for the ray intersection test, we still recursively test the intersection on sub segments since this increases the efficiency).
 
-![](/images/curve.png)
+![](/images/3drenderer/curve.png)
 *A single `Curve` shape of type `cylinder` (see `scenes/final/curve/curve`)*
 
 Finally, in order to be able to render images with fur, I further extended the Nori exporter Blender plugin, by exporting automatically Cycle's Hair particles.
@@ -212,10 +211,10 @@ $$p_1 = (-5y_0 + 18y_1 - 9y_2 + 2y_3 ) / 6$$
 $$p_2 = (2y_0 - 9y_1 + 18y_2 - 5y_3 ) / 6$$
 $$p_3 = y_3$$
 
-![](/images/fur.png)
+![](/images/3drenderer/fur.png)
 *Stanford Bunny rendered with 20,000 fur particles (see `scenes/final/curve/fur`)*
 
-![](/images/hair.png)
+![](/images/3drenderer/hair.png)
 *Model with 5,000 diffuse hairs (see `scenes/final/curve/hair`)*
 
 Image-based lighting (30 points)
@@ -227,23 +226,23 @@ Code:
 This feature has already been discussed in assignments 3 and 5. By using a power of 2 as the resolution of the Chi^2 test (here `xRes, yRes = 256`) and keeping the `sampleCount` at `1000 * res`, we get the following Chi^2 results (see `scenes/final/IBL/chi2`):
 
 <div class="side-by-side">
-    <div><img src="/images/window.png" /></div>
-    <div><img src="/images/window_chi2.png" /></div>
+    <div><img src="/images/3drenderer/window.png" /></div>
+    <div><img src="/images/3drenderer/window_chi2.png" /></div>
 </div><br />
 
 <div class="side-by-side">
-    <div><img src="/images/rainy_day.png" /></div>
-    <div><img src="/images/rainy_day_chi2.png" /></div>
+    <div><img src="/images/3drenderer/rainy_day.png" /></div>
+    <div><img src="/images/3drenderer/rainy_day_chi2.png" /></div>
 </div><br />
 
 <div class="side-by-side">
-    <div><img src="/images/glacier.png" /></div>
-    <div><img src="/images/glacier_chi2.png" /></div>
+    <div><img src="/images/3drenderer/glacier.png" /></div>
+    <div><img src="/images/3drenderer/glacier_chi2.png" /></div>
 </div><br />
 
 <div class="side-by-side">
-    <div><img src="/images/glacier_2.png" /></div>
-    <div><img src="/images/glacier_2_chi2.png" /></div>
+    <div><img src="/images/3drenderer/glacier_2.png" /></div>
+    <div><img src="/images/3drenderer/glacier_2_chi2.png" /></div>
 </div><br />
 
 In order to use Image Based Lighting with an image of any size, I slightly changed the implementation of the `Bitmap` class by finding the upper power of 2 of the original size of the image, and zero-padding it to the right and the bottom so that it fits this new dimension. E.g. an input image of size 240x510 will be zero-padded to fit the size 512x512.
@@ -252,7 +251,7 @@ Finally, we have to make sure that rays that leave the scene don't intersect the
 
 There was certainly a way to directly deal with aspect ratio in the `Warp::squareToHSW` function, but in this way the latter could remain unchanged.
 
-![](/images/IBL_sphere.png)
+![](/images/3drenderer/IBL_sphere.png)
 *A mirror sphere in an interior scene (see `scenes/final/IBL/mirror`)*
 
 Subsurface scattering (60 points)
@@ -277,22 +276,22 @@ The subsurface scattering BSDF works differently from other BSDFs since the irra
 As many other rendering engines, we enable to specify a given scale. Indeed, the scattering and absorption coefficients are defined in a certain unit, which might not correspond to the unit of the scene; we simply multiply $\sigma_s$ and $\sigma_a$ by the provided scale. Below, we show the resulting teapot scene using subsurface scattering with two different scale values.
 
 <div class="twentytwenty-container">
-    <img src="/images/SSS_teapot_scale10.png" alt="Scale: 10" />
-    <img src="/images/SSS_teapot_scale25.png" alt="Scale: 25" />
+    <img src="/images/3drenderer/SSS_teapot_scale10.png" alt="Scale: 10" />
+    <img src="/images/3drenderer/SSS_teapot_scale25.png" alt="Scale: 25" />
 </div>
 _Comparing different scale values for the SSS feature (`scenes/final/subsurface/teapot`)_
 
 In order to add specular reflections to the scene, we can use our previously defined `Mix` BSDF to blend SSS and microfacet materials.
 
-![](/images/SSS_teapot_mix.png)
+![](/images/3drenderer/SSS_teapot_mix.png)
 *Mix of SSS and microfacet materials (`scenes/final/subsurface/teapot`)*
 
 Finally, by setting $\sigma_a$ and $\sigma_s$ to some measured values from real objects (see "A Practical Model for Subsurface Light Transport"), we can render Marble, Ketchup or Apple-like materials:
 
 <div class="twentytwenty-container">
-    <img src="/images/SSS_monkey_marble.png" alt="Marble" />
-    <img src="/images/SSS_monkey_ketchup.png" alt="Ketchup" />
-    <img src="/images/SSS_monkey_apple.png" alt="Apple" />
+    <img src="/images/3drenderer/SSS_monkey_marble.png" alt="Marble" />
+    <img src="/images/3drenderer/SSS_monkey_ketchup.png" alt="Ketchup" />
+    <img src="/images/3drenderer/SSS_monkey_apple.png" alt="Apple" />
 </div>
 _Comparing different $\sigma_a$ and $\sigma_s$ values for the SSS feature (`scenes/final/subsurface/monkey`)_
 
@@ -302,7 +301,7 @@ The validation of this feature wasn't easy: we cannot compare renderings with Bl
 
 The scene is shown in the image below: the small sphere (radius = 0.1) in the center is a light emitter of (constant) radiance $L_e(x, \vec{\omega}) = L_e = 5$ and surface area $S_e = 4 \pi \cdot 0.1^2$. The large sphere (radius = 1) on the outside is the SSS material with $\sigma_s = 2$ and $\sigma_a = 0.002$. The camera is looking downwards.
 
-![](/images/SSS_validation_scene.png)
+![](/images/3drenderer/SSS_validation_scene.png)
 
 The radiant exitance of the light emitter at a surface point is given by integrating its radiance over the hemisphere. When multiplying by the area, we finally get the total flux of this light emitter: $\pi L_e \times S_e$. Therefore, the average irradiance at each sample point is $\frac{\pi L_e \times S_e}{S}$, where $S$ is the surface of the mesh.
 
@@ -326,13 +325,13 @@ $$L_o \approx 0.03074166$$
 
 We can now build a t-test XML file with this reference value (see `scenes/final/subsurface/test`). The test passes successfully with 10,000 samples!
 
-![](/images/SSS_ttest.png)
+![](/images/3drenderer/SSS_ttest.png)
 *Student t-test on the previously described scene*
 
 
 Summary
 =======
-
+### (80 points to get the best grade)
 
 
 Feature                                           | Points      |
@@ -348,7 +347,7 @@ Ray-intersection involving non-triangular shapes  | 20 pts      |
 Image based lighting                              | 30 pts      |
 **Big features**                                  |             |
 Subsurface Scattering                             | 60 pts      |
-**Total (80 points to get best grade)**              | **150 pts** |
+**Total**                                         | **150 pts** |
 
 
 
@@ -357,7 +356,7 @@ Final rendering
 ===============
 
 <div class="artist">
-    <img src="/images/final.jpg" />
+    <img src="/images/3drenderer/final.jpg" />
 </div>
 
 <hr>
