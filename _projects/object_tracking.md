@@ -313,13 +313,23 @@ As a response to those remarks, we design two new architectures that should impr
 **SiamConcatRPN:**:
 Inspired by the reference-guided mask propagation approach used in [Oh et al., 2018] for video segmentation, we build the network shown in figure 13. Notice that unlike all previous siamese architectures, the exemplar and search input frames have the same size. The purpose is two extract, using a ResNet50 backbone, identically shaped feature maps that we can then concatenate channel-wise and perform convolution operations on top of it. We use global convolution, as introduced in [Peng et al., 2017], by combining a $1 \times 9$ followed by a $9 \times 1$ convolutional layer with  a $9 \times 1$ followed by a $1 \times 9$ convolution. The goal of this block is to match corresponding features between the exemplar and the search features: by using global convolution, we have an increased receptive field view compared to a simple $3 \times 3$ convolutional layer by only doubling the needed number of parameters. One Refine module is added by upsampling the feature map and fusing it with ResNet features from the search image, in order to double the feature map size and overcome the coarse representation of the scene. Finally, extra feature layers are used as in SSD to output both confidence and localization scores.
 
-This architecture addresses the issue of SiamRPN in the sense that the proposals are generated from a feature map of channel size 512. However, it still doesn't make use of the ground-truth bounding box of the exemplar frame. To do so, we represent the bounding box as a binary mask, use an additional convolutional layer and add the resulting feature map to the first layer of the ResNet50 network, as shown in figure 14a.
+This architecture addresses the issue of SiamRPN in the sense that the proposals are generated from a feature map of channel size 512. However, it still doesn't make use of the ground-truth bounding box of the exemplar frame. To do so, we represent the bounding box as a binary mask, use an additional convolutional layer and add the resulting feature map to the first layer of the ResNet50 network, as shown in figure 15a.
 
-The same procedure is used for the search image. However, in this case, we don't have the ground-truth bounding box at tracking time; we therefore use the _predicted_ bounding box from the previous frame to _guide_ the network. During training, naively using the ground-truth bounding box from the previous frame would result in a good train loss but a bad test loss since the predicted proposal may not be exactly at the true position: in order to make the network robust to these errors, we add some jitter (both in position and size) to the ground-truth bounding box, as shown in figure 14b. Results are shown in section 4.
+The same procedure is used for the search image. However, in this case, we don't have the ground-truth bounding box at tracking time; we therefore use the _predicted_ bounding box from the previous frame to _guide_ the network. During training, naively using the ground-truth bounding box from the previous frame would result in a good train loss but a bad test loss since the predicted proposal may not be exactly at the true position: in order to make the network robust to these errors, we add some jitter (both in position and size) to the ground-truth bounding box, as shown in figure 15b. Results are shown in section 4.
 
 
 ![](/images/object_tracking/architectures/SiamConcatRPN.pdf)
 <div class="legend">Figure 13: The SiamConcatRPN architecture. The exemplar and search feature maps are concatenated and processed by a global convolution block. The resulting feature map is refined and passed to the final RPN layers.</div>
+
+
+<div style="margin-top:5em"></div>
+
+
+![](/images/object_tracking/img/global_convolution.pdf)
+<div class="legend">Figure 14: k × k Global convolution compared to a standard k × k convolutional layer.</div>
+
+
+<div style="margin-top:5em"></div>
 
 
 <div class="side-by-side">
@@ -333,17 +343,17 @@ The same procedure is used for the search image. However, in this case, we don't
   </div>
 </div>
 
-<div class="legend">Figure 14: Illustration of how the ground-truth exemplar and search bounding boxes are used in the SiamConcatRPN architecture to produce a binary mask. The latter is processed by a convolutional layer and added to the first layer of the ResNet network.</div>
+<div class="legend">Figure 15: Illustration of how the ground-truth exemplar and search bounding boxes are used in the SiamConcatRPN architecture to produce a binary mask. The latter is processed by a convolutional layer and added to the first layer of the ResNet network.</div>
 
 
 
 **SiamBroadcastRPN:**:
-One of the issues of the architecture described above is that it is relying only on convolutional layers and may be missing a similarity map output. A way to address this problem is to reduce the exemplar feature map of size $H \times W \times C$ to a single vector of dimension $C$ using a MaxPool operation; then, instead of convolving this vector with the search feature map directly (which would result in a 2D correlation map), we broadcast the vector to the same spatial size as the search feature map, similarly to [Lu et al., 2018]. We can then concatenate the two feature maps as in the SiamConcatRPN architecture and output the confidence and localization scores using extra feature layers in an SSD-like fashion, as illustrated in figure 15. By doing this, the convolutional layers compute a similarity measure at every location of the search feature map, using a compact representation of the exemplar frame. Results are shown in section 4.
+One of the issues of the architecture described above is that it is relying only on convolutional layers and may be missing a similarity map output. A way to address this problem is to reduce the exemplar feature map of size $H \times W \times C$ to a single vector of dimension $C$ using a MaxPool operation; then, instead of convolving this vector with the search feature map directly (which would result in a 2D correlation map), we broadcast the vector to the same spatial size as the search feature map, similarly to [Lu et al., 2018]. We can then concatenate the two feature maps as in the SiamConcatRPN architecture and output the confidence and localization scores using extra feature layers in an SSD-like fashion, as illustrated in figure 16. By doing this, the convolutional layers compute a similarity measure at every location of the search feature map, using a compact representation of the exemplar frame. Results are shown in section 4.
 
 
 
 ![](/images/object_tracking/architectures/SiamBroadcastRPN.pdf)
-<div class="legend">Figure 15: The SiamBroadcastRPN architecture. A MaxPool layer reduces the exemplar features to a vector, which can be concatenated to the search features after a Broadcast operation.</div>
+<div class="legend">Figure 16: The SiamBroadcastRPN architecture. A MaxPool layer reduces the exemplar features to a vector, which can be concatenated to the search features after a Broadcast operation.</div>
 
 
 
@@ -351,13 +361,13 @@ One of the issues of the architecture described above is that it is relying only
 ## 4. Results on OTB-2015
 
 
-The networks described in section 3 are benchmarked on the OTB-2015 dataset in figure 16.
+The networks described in section 3 are benchmarked on the OTB-2015 dataset in figure 17.
 
 **SiamRPN:**:
 The reproduction of SiamRPN achieves a slightly lower success score than the original model  [Li et al., 2018b] (which scores at 0.63 on OTB-2015). One possible reason is that the network was trained on the TrackingNet dataset (and moreover only half of it), which is a filtered version of the Youtube-Bounding Boxes dataset [Müller et al., 2018], while the original model was trained using Youtube-BB.
 
 **SiamConcatRPN:**:
-While validation results are surprisingly good (see figure 17), the results on OTB-2015 are below expectations. We identify two possible explanations: the first one is that since the network is trained with jittered guides, it has a tendency to regress the bounding box of the closest semantic object: as an example, by choosing as exemplar a subpart of an object (like the lower half of a face or the window of a car), the network will end up tracking the entire object, resulting in a much lower IoU. Secondly, the network may place too much importance on the mask guide: thus, detecting the wrong semantic object in one frame will prevent the network from finding the true object in the next frames, resulting in a low robustness.
+While validation results are surprisingly good (see figure 18), the results on OTB-2015 are below expectations. We identify two possible explanations: the first one is that since the network is trained with jittered guides, it has a tendency to regress the bounding box of the closest semantic object: as an example, by choosing as exemplar a subpart of an object (like the lower half of a face or the window of a car), the network will end up tracking the entire object, resulting in a much lower IoU. Secondly, the network may place too much importance on the mask guide: thus, detecting the wrong semantic object in one frame will prevent the network from finding the true object in the next frames, resulting in a low robustness.
 
 **SiamBroadcastRPN:**:
 The success score is very similar to the one obtained for SiamRPN. This is actually rather surprising since the architectures are completely different: indeed, instead of computing the cross-correlation (product) between two image patches, using their concatenated features only can achieve as good results.
@@ -370,7 +380,7 @@ The success score is very similar to the one obtained for SiamRPN. This is actua
     <img src="/images/object_tracking/results/precision_plots.png" height="200" />
 </div>
 
-<div class="legend">Figure 16: Success and Precision plots of the constructed networks on OTB-2015.</div>
+<div class="legend">Figure 17: Success and Precision plots of the constructed networks on OTB-2015.</div>
 
 
 
@@ -386,7 +396,7 @@ The success score is very similar to the one obtained for SiamRPN. This is actua
 </div>
 
 
-<div class="legend">Figure 17: Validation results from the SiamConcatRPN model after training. Each image pair corresponds to an exemplar and search frame. In the search image, the bounding boxes correspond to: the ground-truth (in blue), the predicted box (in red), the best default box (in yellow), the jittered guide (in green). On the top images, we identify that the network achieves to recover the bounding box of an object even when the guiding mask is severely scaled and displaced. On the bottom images, we notice that the guide is useful to distinguish the object from semantic distractors.</div>
+<div class="legend">Figure 18: Validation results from the SiamConcatRPN model after training. Each image pair corresponds to an exemplar and search frame. In the search image, the bounding boxes correspond to: the ground-truth (in blue), the predicted box (in red), the best default box (in yellow), the jittered guide (in green). On the top images, we identify that the network achieves to recover the bounding box of an object even when the guiding mask is severely scaled and displaced. On the bottom images, we notice that the guide is useful to distinguish the object from semantic distractors.</div>
 
 
 
@@ -397,7 +407,7 @@ In this project, our aim was to reproduce state-of-the-art real-time trackers an
 
 On a side note, recent trackers rely, as we have seen, on more and more complex training and data augmentation procedures; thus reproducing the published results has become both time-consuming and error-prone. Sharing complete codes of state-of-the-art networks  (instead of only submitting tracking codes) would certainly be very beneficial for the tracking research community.
 
-Finally, it is worthwhile noting that even if state of the art trackers have recently shown impressive performance, most of them if not all still fail on sequences that would seem easy for humans. This is particularly the case for sequences including temporary occlusions and semantic distractors (see figure 18), where humans have no difficulty to _predict_ the trajectory of an object, in order to estimate its position when it is occluded, or to distinguish it from distractors. Thus, there is still room for improvement in the object tracking discipline, in contrast for instance to the object classification problem where human's ability to classify has been outperfomed by deep networks: indeed, an approximate upper-bound on human error on the ILSVRC testset is 5.1% ([karpathy.github.io/](http://karpathy.github.io/2014/09/02/what-i-learned-from-competing-against-a-convnet-on-imagenet/)), compared to the state of the art 2.25% with the Squeeze-and-Excitation Resnet architecture [Hu et al., 2017]. One possible way of improvement would be to explicitly model the motion of the tracked object and include it in the tracker, or to follow an approach similar to [Luc et al., 2018] in order to predict future instance segmentations.
+Finally, it is worthwhile noting that even if state of the art trackers have recently shown impressive performance, most of them if not all still fail on sequences that would seem easy for humans. This is particularly the case for sequences including temporary occlusions and semantic distractors (see figure 19), where humans have no difficulty to _predict_ the trajectory of an object, in order to estimate its position when it is occluded, or to distinguish it from distractors. Thus, there is still room for improvement in the object tracking discipline, in contrast for instance to the object classification problem where human's ability to classify has been outperfomed by deep networks: indeed, an approximate upper-bound on human error on the ILSVRC testset is 5.1% ([karpathy.github.io/](http://karpathy.github.io/2014/09/02/what-i-learned-from-competing-against-a-convnet-on-imagenet/)), compared to the state of the art 2.25% with the Squeeze-and-Excitation Resnet architecture [Hu et al., 2017]. One possible way of improvement would be to explicitly model the motion of the tracked object and include it in the tracker, or to follow an approach similar to [Luc et al., 2018] in order to predict future instance segmentations.
 
 
 
@@ -413,7 +423,7 @@ Finally, it is worthwhile noting that even if state of the art trackers have rec
   </div>
 </div>
 
-<div class="legend">Figure 18: Failures of SiamRPN++ on the OTB-2015 dataset. Although the performance of this tracker is impressive, there is still room for improvement. In particular, SiamRPN++ fails in some sequences including occlusions and semantic distractors.</div>
+<div class="legend">Figure 19: Failures of SiamRPN++ on the OTB-2015 dataset. Although the performance of this tracker is impressive, there is still room for improvement. In particular, SiamRPN++ fails in some sequences including occlusions and semantic distractors.</div>
 
 
 
