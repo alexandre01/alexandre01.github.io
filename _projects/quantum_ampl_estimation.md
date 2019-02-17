@@ -12,6 +12,10 @@ priority: 150
 I've read the (very dense!) paper [Quantum Amplitude Amplification and Estimation](https://arxiv.org/abs/quant-ph/0005055) by Brassard et al. (2000) and made a comprehensible 30 minutes presentation.
 
 <style>
+article.project {
+  line-height: 24px;
+}
+
   article.project img {
     display: block;
     margin: 0 auto;
