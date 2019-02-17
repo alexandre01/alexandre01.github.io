@@ -10,7 +10,10 @@ layout: default
   <h2 class="project-list-heading">Recent projects</h2>
 
   <div class="row project-list">
-    {%- for project in site.projects -%}
+    {% assign sorted_projects = (site.projects | sort: 'priority') | reverse %}
+
+    {%- for project in sorted_projects -%}
+    {% if project.visible != false %}
     <a href="{{ project.url | relative_url }}">
       <div class="col-sm-6 project-cell">
         <h3>{{ project.title | escape }}</h3>
@@ -19,6 +22,7 @@ layout: default
         </div>
       </div>
     </a>
+    {%- endif -%}
     {%- endfor -%}
   </div>
 

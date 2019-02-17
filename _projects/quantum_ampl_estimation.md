@@ -6,6 +6,7 @@ image: circuit.jpg
 show_image: false
 report: quantum_ampl_estimation.pdf
 show_report: false
+priority: 150
 ---
 
 I've read the (very dense!) paper [Quantum Amplitude Amplification and Estimation](https://arxiv.org/abs/quant-ph/0005055) by Brassard et al. (2000) and made a comprehensible 30 minutes presentation.
@@ -15,7 +16,7 @@ I've read the (very dense!) paper [Quantum Amplitude Amplification and Estimatio
     display: block;
     margin: 0 auto;
   }
-  
+
   .legend {
     text-align: center;
   }
@@ -73,7 +74,7 @@ Q & = -\mathcal{A} S_0 \mathcal{A}^\dagger S_\chi \\
 
 
 ### Matrix representation of $Q$
-    
+
 $$\begin{split}
   Q \ket{\Psi_1} & = U_\Psi U_{\Psi_0} \ket{\Psi_1} = - U_\Psi \ket{\Psi_1} = (I - 2 \ket{\Psi}\bra{\Psi}) \ket{\Psi_1} \\
   & = \ket{\Psi_1} - 2a\ket{\Psi} = (1-2a)\ket{\Psi_1}-2a\ket{\Psi_0} \\
@@ -90,7 +91,7 @@ $$\begin{split}
   Q \frac{\ket{\Psi_0}}{\sqrt{1-a}} & = \sin(2\theta_a) \frac{\ket{\Psi_1}}{\sqrt{a}} + \cos(2\theta_a) \frac{\ket{\Psi_0}}{\sqrt{1-a}}
 \end{split}$$
 
-    
+
 - Thus, $Q$ is a rotation matrix in the basis $\{\frac{1}{\sqrt{a}} \ket{\Psi_1}, \frac{1}{\sqrt{1-a}} \ket{\Psi_0}\}$:
 
 $$Q =
@@ -100,7 +101,7 @@ $$Q =
   \end{pmatrix}$$
 
 - It has eigenvalues $e^{2i\theta_a}, e^{-2i\theta_a}$ with corresponding eigenvectors $\frac{1}{2} \begin{pmatrix} 1 \\ i \end{pmatrix}, \frac{1}{2} \begin{pmatrix} 1 \\ -i \end{pmatrix}$, noted $\ket{\Psi_+}$ and $\ket{\Psi_-}$.
-    
+
 - We can now write $\ket{\Psi}$ in the $Q$-eigenvector basis:
 
 $$\ket{\Psi} = \frac{-i}{2} (e^{i\theta_a} \ket{\Psi_+} - e^{-i\theta_a} \ket{\Psi_-})$$ and it follows that:
@@ -118,27 +119,27 @@ $$Q^j \ket{\Psi} = \sin((2j+1)\theta_a) \frac{1}{\sqrt{a}} \ket{\Psi_1} + \cos((
 - Thus the probability is maximized for $m = \left \lfloor{\pi/(4\theta_a)}\right \rfloor $ (when the value of $a$ is known).
 
 - We can show that $\sin^2((2m+1) \theta_a) \geq 1-a$.
-    
+
 
 
 ### Complexity of the algorithm
-    
+
 
 
 - We use $2m+1$ applications of $\mathcal{A}$ and $\mathcal{A}^\dagger$.
 
 - Since $\theta_a \approx \sin(\theta_a) = \sqrt{a}$, we get:
-    
-    
+
+
 $$\begin{split}
     2m+1 & = 2 \left \lfloor{\pi/(4\theta_a)}\right \rfloor +1 \\
      & \approx 2 \left \lfloor{\pi/(4 \sqrt{a})}\right \rfloor +1 \\
      & = \mathcal{O}(\frac{1}{\sqrt{a}}) \\
 \end{split}$$
-    
-    
+
+
 - And the success probability is $1-a \approx 1$.
-    
+
 
 ### Visual demo
 
@@ -151,7 +152,7 @@ And indeed $m = \left \lfloor{\pi/4\theta_a}\right \rfloor = 11$.
 
 ### Grover's algorithm
 $\ket{\Psi} = \frac{1}{\sqrt{N}} \sum_{x = 0}^{N-1} \ket{x}$ and $\chi = \mathbb{1}_{x = 0}$. Then $a = 1/N \ll 1$, $$m = \left \lfloor{\frac{\pi}{4\theta_a}}\right \rfloor \approx \left \lfloor{\frac{\pi}{4 \sin \theta_a}}\right \rfloor = \left \lfloor{\frac{\pi \sqrt{N}}{4}}\right \rfloor = \mathcal{O}(\sqrt{N})$$ and we get the state $\ket{0}$ with probability $\sin^2((2m+1) \theta_a) \geq 1-a \approx 1$.
-    
+
 ![](/images/quantum_ampl_estimation/grover.jpg)
 
 
@@ -174,7 +175,7 @@ By choosing $M$ sufficiently large, $M \theta_a$ is large and by picking $j \in_
 - Then, the probability $\sin^2((2j+1)\theta_a)$ that the measurement produces a good state is in average $\frac{1}{2}$.
 
 - Since we don't know $\theta_a$, we use an exponential search space for $M = c^l$ by iteratively incrementing the value of $l$ for a constant $c$.
-    
+
 
 
 ### The QSearch algorithm
@@ -187,7 +188,7 @@ By choosing $M$ sufficiently large, $M \theta_a$ is large and by picking $j \in_
 
 
 ### Quantum de-randomization when $a$ is known
-    
+
 The success probability of the Quantum Amplitude Amplification algorithm is $1-a$. It turns out we can actually find a good solution with *certainty*.
 
 
@@ -196,10 +197,10 @@ The success probability of the Quantum Amplitude Amplification algorithm is $1-a
 - If $\tilde{m}$ is an integer, $\sin^2((2\tilde{m}+1) \theta_a) = 1$.
 
 - Else we use $m = \left \lceil{\tilde{m}}\right \rceil = \left \lfloor{\pi/(4\theta_a)}\right \rfloor$ iterations, which is slightly too much.
-    
-    
+
+
 The de-randomization approach is the following:
-    
+
 - Apply $Q$ only $\left \lfloor{\tilde{m}}\right \rfloor$ times. The resulting state is:
 
 $$\sin((2\left \lfloor{\tilde{m}}\right \rfloor+1)\theta_a) \frac{1}{\sqrt{a}} \ket{\Psi_1} + \cos((2\left \lfloor{\tilde{m}}\right \rfloor+1)\theta_a) \frac{1}{\sqrt{1-a}} \ket{\Psi_0}$$
@@ -210,7 +211,7 @@ $$\text{where } \left\{\begin{array}{l}
     S_0(\phi) = e^{i\phi} \ket{0} \bra{0} + \ket{1}\bra{1} \\
     S_\chi(\varphi) = \frac{e^{i\varphi}}{\sqrt{a}} \ket{\Psi_1}\bra{\Psi_1} + \frac{1}{\sqrt{1-a}} \ket{\Psi_0}\bra{\Psi_0}
 \end{array}\right.$$
-    
+
 
 
 - $Q = Q'(\phi = \pi, \varphi = \pi)$
@@ -222,14 +223,14 @@ $$\begin{split}
     ((1-e^{i\phi})a+e^{i\phi}) \right.\\
     \left. \frac{1}{\sqrt{1-a}} \cos((2\left\lfloor{\tilde{m}}\right\rfloor+1)\theta_a) \right) \ket{\Psi_0}
 \end{split}$$
-    
-    
+
+
 - We can choose $\phi$ and $\varphi$ so that the coefficient in front of $\ket{\Psi_0}$ = 0: $$\begin{split}
     \iff \cot((2\left\lfloor{\tilde{m}}\right\rfloor+1)\theta_a) & = e^{i\varphi} 2\sqrt{a(1-a)} \frac{1-e^{i\phi}}{2((1-e^{i\phi})a+e^{i\phi})} \\
     &= e^{i\varphi} \sin(2\theta_a) (2\underbrace{a}_{= 1-\cos(2\theta_a)} + \frac{2e^{i\phi}}{1-e^{i\phi}})^{-1} \\
     &= e^{i\varphi} \sin(2\theta_a) (-\cos(2\theta_a) + \underbrace{\frac{1+e^{i\phi}}{1-e^{i\phi}}}_{= i\cot(\phi/2)})^{-1}
 \end{split}$$
-    
+
 
 
 
@@ -261,7 +262,7 @@ $$F_M : \ket{x} \mapsto \frac{1}{\sqrt{M}} \sum_{y=0}^{M-1} e^{2\pi ixy/M} \ket{
 
 $$\ket{S_M(\omega)} = \frac{1}{\sqrt{M}} \sum_{y=0}^{M-1} e^{2\pi i\omega y} \ket{y}$$
 so that, for $x \in \{0, \dots, M-1\}$: $\ket{S_M(x/M)} = F_M \ket{x}$.
-  
+
 
 
 ### Quantum circuit for amplitude estimation
@@ -276,7 +277,7 @@ $(F_M^{-1} \tens I)(\Lambda_M(Q))(F_M \tens I)$ applied on the state $\ket{0} \t
 The quantum circuit corresponds to the unitary transformation $(F_M^{-1} \tens I)(\Lambda_M(Q))(F_M \tens I)$ applied on the state $\ket{0} \tens \mathcal{A} \ket{0}$, with
 
 $$\mathcal{A} \ket{0} = -\frac{i}{\sqrt{2}}(e^{i \theta_a} \ket{\Psi_+} - e^{-i \theta_a} \ket{\Psi_-})$$
-  
+
 By applying $F_M \tens I$:
 
 $$\frac{1}{\sqrt{2M}}\sum_{j=0}^{M-1} \ket{j} \tens (e^{i \theta_a} \ket{\Psi_+} - e^{-i \theta_a} \ket{\Psi_-})$$
@@ -284,7 +285,7 @@ $$\frac{1}{\sqrt{2M}}\sum_{j=0}^{M-1} \ket{j} \tens (e^{i \theta_a} \ket{\Psi_+}
 After applying $\Lambda_M(Q)$:
 
 $$\frac{e^{i \theta_a}}{\sqrt{2}} \ket{S_M(\theta_a/\pi)} \tens \ket{\Psi_+} - \frac{e^{-i \theta_a}}{\sqrt{2}} \ket{S_M(1 - \theta_a/\pi)} \tens \ket{\Psi_-}$$
-    
+
 - Finally, after $F_M^{-1} \tens I$, we have:
 
 $$\frac{e^{i \theta_a}}{\sqrt{2}} F_M^{-1} \ket{S_M(\theta_a/\pi)} \tens \ket{\Psi_+} - \frac{e^{-i \theta_a}}{\sqrt{2}} F_M^{-1} \ket{S_M(1 - \theta_a/\pi)} \tens \ket{\Psi_-}$$
@@ -331,7 +332,7 @@ $$\begin{split}
 Since the minimum of this expression is reached at $\Delta = 1/(2M)$.
 
 A bounding error on $\tilde{\theta_a}$ translates into a bound on $\tilde{a}$.
-    
+
 #### Lemma:
 Let $a = \sin^2(\theta_a)$ and $\tilde{a} = \sin^2(\tilde{\theta_a})$ with $0 \leq \theta_a, \tilde{\theta_a} \leq \frac{\pi}{2}$. Then:
 
@@ -351,7 +352,7 @@ $$\begin{split}
   & = \sqrt{a(1-a)}\sin(2\epsilon)+(1-2a)\sin^2(\epsilon) \\
   & \leq 2 \epsilon \sqrt{a(1-a)} + \epsilon^2
 \end{split}$$
-    
+
 Same for $a - \tilde{a}$.
 
 Combining those results, the Amplitude Estimation algorithm outputs $\tilde{\theta_a}$ such that
@@ -361,8 +362,8 @@ $$|\tilde{\theta_a}/\pi - \theta_a/\pi| \leq \frac{1}{M}$$
 $$\iff |\tilde{\theta_a} - \theta_a| \leq \frac{\pi}{M}$$
 
 with probability greater than $8/\pi^2$.
-    
-    
+
+
 Thus, by setting $\epsilon = \frac{\pi}{M}$:
 
 $$|\tilde{a} - a| \leq 2 \pi \frac{\sqrt{a(1-a)}}{M} + \frac{\pi^2}{M^2}$$
@@ -405,14 +406,14 @@ $$F: \ket{i} \tens \ket{0} \mapsto \ket{i} \tens (\sqrt{1 - f(i)} \ket{0} + \sqr
 Then:
 
 $$F \ket{\Psi} \tens \ket{0} = \sum_{i=0}^{N-1} \sqrt{1-f(i)}\sqrt{p_i} \ket{i} \tens \ket{0} + \sqrt{f(i)} \sqrt{p_i} \ket{i} \tens \ket{1}$$
- 
+
 
 Using amplitude estimation, we estimate the probability to measure $\ket{1}$ in the last Qbit: $\tilde{a} = \sum_{i=0}^{N-1} p_i f(i) = \mathbb{E}[f(X)]$, and using $M$ evaluations of $f$:
 
 $$\left|\tilde{a} - a\right| \leq 2\pi\frac{\sqrt{a(a-a)}}{M} + \frac{\pi^2}{M^2}$$
 
 with a convergence rate of $\mathcal{O}(\frac{1}{M})$ to be compared to the classical $\mathcal{O}(\frac{1}{\sqrt{M}})$ rate.
-    
+
 
 ### 3. Application to Quantum Risk Analysis
 
@@ -421,7 +422,7 @@ with a convergence rate of $\mathcal{O}(\frac{1}{M})$ to be compared to the clas
 - For a confidence value $\alpha \in [0, 1]$, $\text{VaR}_\alpha(X)$ is the smallest $l$ such that $\mathbb{P}[X \leq l] \geq (1-\alpha)$.
 
 - By defining $f_l(x) = 1$ if $\mathbb{1}_{x \leq l}$, we thus want to approximate $\mathbb{P}[X \leq l] = \mathbb{E}[f_l(X)]$ of a random variable $X$ taking values $\{0, \dots, N\}$ with probability $p_i$.
-    
+
 
 
 ## IV. Conclusion

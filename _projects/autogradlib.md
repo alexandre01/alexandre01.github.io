@@ -7,6 +7,7 @@ show_image: false
 github: autogradlib
 report: autogradlib.pdf
 show_report: false
+priority: 300
 ---
 
 <style>
@@ -14,14 +15,14 @@ show_report: false
     display: block;
     margin: 0 auto;
   }
-  
+
   article.project em {
     display: block;
     text-align: center;
   }
 </style>
 
-In this project, we build a small deep learning framework called **Autogradlib** using only PyTorch's `Tensor` operations and the standard math library. The autograd mechanism and the high-level syntax are inspired by PyTorch.
+In this project, I built a small deep learning framework called **Autogradlib** using only PyTorch's `Tensor` operations and the standard math library. The autograd mechanism and the high-level syntax are inspired by PyTorch.
 
 Autogradlib builds a gradient operations directed acyclic graph (DAG) on the fly, which enables to perform efficiently the backprop algorithm and to draw the associated graph using `graphviz` (see next figure).
 
@@ -136,7 +137,7 @@ The learning curves are showed in the following figure.
 ### Performance comparison with PyTorch
 We run the training of the same model 20 times on a MacBook Pro (2.7 Ghz Intel Core i5) and compute the mean and median execution durations using Autogradlib and PyTorch.
 
-  
+
 | Library     |   Mean time  |  Median time |
 |:-----------:|:------------:|:------------:|
 |  PyTorch    | 0.804s       | 0.779s       |

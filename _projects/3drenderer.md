@@ -4,6 +4,7 @@ title: Physically-based 3D renderer in C++
 author: Alexandre Carlier
 image: SSS_teapot_mix.png
 show_image: false
+priority: 400
 ---
 
 In this project, I wrote a complete 3D renderer in C++ and extended it with advanced features including image-based lighting and Subsurface scattering. Please find below my work in the context of the EPFL rendering competition from the course [CS-440: Advanced Computer Graphics](https://rgl.epfl.ch/courses/ACG18).
