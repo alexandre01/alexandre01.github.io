@@ -9,23 +9,37 @@
     {%- include google-analytics.html -%}
   {%- endif -%}
 
+  {% if site.google_analytics and jekyll.environment == 'production' %}
+  {% include analytics.html %}
+  {% endif %}
+
   <script type="text/x-mathjax-config">
-     MathJax.Ajax.config.path["Contrib"]="https://cdn.mathjax.org/mathjax/contrib";
-     MathJax.Hub.Register.StartupHook("TeX Jax Ready",function (){MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{cancel: ["Extension","cancel"], bcancel: ["Extension","cancel"], xcancel: ["Extension","cancel"], cancelto: ["Extension","cancel"]});});
-     MathJax.Hub.Config({
-      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']], processEscapes: true},
-      TeX: {
-        equationNumbers:{autoNumber: "AMS"},
-        extensions: ["[Contrib]/physics/physics.js","[Contrib]/siunitx/siunitx.js"],
-        Macros: {
-          RR: "{\\bf R}",
-          bold: ["{\\bf #1}",1],
-          E: "\\mathbb{E}",
-          pluseq: "\\mathrel{+}\\mathrel{\\mkern-2mu}=",
-          tens: "\\otimes"
-        }
-      }
-    });
-  </script>
+  MathJax.Ajax.config.path["Contrib"] = "https://cdn.mathjax.org/mathjax/contrib";
+MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
+  MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros, {
+    cancel: ["Extension", "cancel"],
+    bcancel: ["Extension", "cancel"],
+    xcancel: ["Extension", "cancel"],
+    cancelto: ["Extension", "cancel"]
+  });
+});
+MathJax.Hub.Config({
+  tex2jax: { inlineMath: [["$", "$"], ["\\(", "\\)"]], processEscapes: true },
+  TeX: {
+    equationNumbers: { autoNumber: "AMS" },
+    extensions: [
+      "[Contrib]/physics/physics.js",
+      "[Contrib]/siunitx/siunitx.js"
+    ],
+    Macros: {
+      RR: "{\\bf R}",
+      bold: ["{\\bf #1}", 1],
+      E: "\\mathbb{E}",
+      pluseq: "\\mathrel{+}\\mathrel{\\mkern-2mu}=",
+      tens: "\\otimes"
+    }
+  }
+});
+</script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML-full"></script>
 </head>
