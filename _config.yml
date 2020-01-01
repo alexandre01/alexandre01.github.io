@@ -1,6 +1,7 @@
 title: Alexandre Carlier
 author: Alexandre Carlier
 email: alexandre.carlier01@gmail.com
+url: "https://alexandre.carlier.page"
 description: > # this means to ignore newlines until "twitter_username:"
   CS graduate student at EPFL
 
@@ -49,11 +50,14 @@ theme: minima
 plugins:
  - jekyll-feed
  - jekyll-seo-tag
+ - jekyll-sitemap
 
 permalink: pretty
 
 collections:
   projects:
+    output: true
+  posts:
     output: true
 
 # Google Analytics

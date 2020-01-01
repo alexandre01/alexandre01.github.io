@@ -13,10 +13,6 @@ priority: 300
 <div style="margin-top: 2em"></div>
 
 <style>
-  article.project {
-    line-height: 24px;
-  }
-
   article.project img {
     display: block;
     margin: 0 auto;

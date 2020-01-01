@@ -5,7 +5,6 @@
     {%- assign page_paths = site.header_pages | default: default_paths -%}
     {%- assign titles_size = site.pages | map: 'title' | join: '' | size -%}
     <a class="site-title" rel="author" href="{{ "/" | relative_url }}">
-      <img src="/assets/avatar.png" />
       {{ site.title | escape }}
     </a>
 
@@ -22,10 +21,12 @@
 
         <div class="trigger">
           {%- for path in page_paths -%}
-            {%- assign my_page = site.pages | where: "path", path | first -%}
-            {%- if my_page.title -%}
-            <a class="page-link" href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a>
-            {%- endif -%}
+              {%- assign my_page = site.pages | where: "path", path | first -%}
+              {%- if my_page.title -%}
+                {% unless my_page.exclude %}
+                  <a class="page-link" href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a>
+                {% endunless %}
+              {%- endif -%}
           {%- endfor -%}
         </div>
       </nav>

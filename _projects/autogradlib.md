@@ -11,10 +11,6 @@ priority: 300
 ---
 
 <style>
-  article.project {
-    line-height: 24px;
-  }
-
   article.project img {
     display: block;
     margin: 0 auto;

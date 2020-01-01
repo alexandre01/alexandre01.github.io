@@ -7,8 +7,41 @@ layout: default
     <h1 class="page-heading">{{ page.title }}</h1>
   {%- endif -%}
 
-  <h2 class="project-list-heading">Recent projects</h2>
+  <div class="about-me">
+    <div class="row vertical-align">
+      <div class="col-sm-3">
+        <img src="/assets/alexandre_carlier.jpg" class="img-circle" max-height=200>
+      </div>
 
+      <div class="col-sm-9">
+        <p>I'm a Computer Science graduate student current doing my master thesis at ETH Zurich. I've studied at École Centrale Paris (CentraleSupélec) and EPFL.</p>
+        <p>I've interned at the research center of Amazon Prime Air, where I was working on single-shot anchor-free object detection and instance segemntation.</p>
+        <p>I'm working now on video object segmentation and visual object tracking.</p>
+
+        <a href="https://twitter.com/alxandrecarlier?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-size="large" data-show-count="false">Follow @alxandrecarlier</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+      </div>
+    </div>
+
+  </div>
+
+
+  <h2 class="project-list-heading">Machine Learning posts</h2>
+  <div class="row project-list">
+    {%- for post in site.posts -%}
+
+    <a href="{{ post.url | relative_url }}">
+      <div class="col-sm-6 project-cell">
+        <h3>{{ post.title | escape }}</h3>
+        <div class="project-image">
+          <img src="{{ site.baseurl }}/images/{{ post.slug }}/{{ post.image }}">
+        </div>
+      </div>
+    </a>
+    {%- endfor -%}
+  </div>
+
+
+  <h2 class="project-list-heading">Recent projects</h2>
   <div class="row project-list">
     {% assign sorted_projects = (site.projects | sort: 'priority') | reverse %}
 

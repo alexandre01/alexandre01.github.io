@@ -3,3 +3,21 @@
 ---
 
 @import "minima";
+
+body {
+  font-family: "Google Sans";
+  color: #5f6368;
+  font-size: 16px;
+  line-height: 28px;
+}
+
+.site-title {
+  font-weight: 100 !important;
+  color: rgb(240, 240, 240) !important;
+}
+
+.about-me img {
+  @media screen and (max-width: 767px) {
+    max-width: 200px !important;
+  }
+}
