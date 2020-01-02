@@ -2,7 +2,7 @@
 layout: post
 title: Broadcasting magic ✨
 author: Alexandre Carlier
-image: broadcasting_bg.png
+image: broadcasting.png
 show_image: false
 priority: 400
 ---
@@ -13,6 +13,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 import torch.nn.functional as F
 ```
+
+![](/images/broadcasting/all.png)
 
 An important aspect of writing efficient Deep Learning code is to understand the basic operations one can do with tensors. Those include math operations like addition and multiplication or methods like `view` and `transpose`. Check out <https://fleuret.org/ee559/ee559-slides-1-5-high-dimension-tensors.pdf> to have a visual understanding of how these operations work. Another important concept is the so-called "_broadcasting_" mechanism, which automatically expands dimensions of size 1 when shapes of tensors don't match.
 
@@ -36,6 +38,7 @@ Let us first visualize our tensor. A neat trick is to _unsqueeze_ the first dime
 ```python
 plt.imshow(x.unsqueeze(0), cmap="Reds", vmin=0, vmax=3)
 ```
+![](/images/broadcasting/pb1_1.png)
 
 By using the repeat operator, we can repeat the 0-1 pattern as many times as we want.
 
@@ -44,12 +47,14 @@ y = torch.arange(2).repeat(5)
 
 plt.imshow(y.unsqueeze(0), cmap="Reds", vmin=0, vmax=3)
 ```
+![](/images/broadcasting/pb1_2.png)
 
 Let us draw our pattern vertically now. This is easily done by inserting a new dimension at the second dim (instead of the first one). We now have a 2D matrix of shape [10, 1].
 
 ```python
 plt.imshow(y.unsqueeze(1), cmap="Reds", vmin=0, vmax=3)
 ```
+![](/images/broadcasting/pb1_3.png)
 
 In order to create our picnic tablecloth, what we'd like to do is to pull those flat shapes towards the bottom and the right (respectively). We could do that by using again the `repeat` operator and then summing.
 
@@ -67,6 +72,7 @@ plt.imshow(z2, cmap="Reds", vmin=0, vmax=3)
 plt.subplot(1, 3, 3)
 plt.imshow(s, cmap="Reds", vmin=0, vmax=3)
 ```
+![](/images/broadcasting/pb1_4.png)
 
 Using the "broadcasting" mechanism, the repeat operation can be handled implictely by PyTorch, by just summing two matrices of shape [1, 10] and [10, 1]. Thus, discarding `repeat` in the previous code leads to the exact same result (the repeat operations just happen under the hood now). This results in cleaner and faster code. Magic!
 
@@ -89,6 +95,7 @@ plt.imshow(s, cmap="Reds", vmin=0, vmax=3)
 plt.subplot(1, 3, 3)
 plt.imshow(s, cmap="Reds", vmin=0, vmax=3)
 ```
+![](/images/broadcasting/pb1_5.png)
 
 # 2. Rotated square
 
@@ -110,6 +117,7 @@ Again, let us visualize first our 1D array by unsqueezing the first dimension.
 plt.imshow(l.unsqueeze(0).repeat(1, 1), cmap="Blues", vmin=0, vmax=1)
 plt.xticks([], []); plt.yticks([], []);
 ```
+![](/images/broadcasting/pb2_1.png)
 
 We want the values to be symmetrical around the center. This can be done by subtracting 0.5 and applying the absolute value.
 
@@ -118,6 +126,7 @@ x = 1 - (l - .5).abs()
 
 plt.imshow(x.unsqueeze(0).repeat(1, 1), cmap="Blues", vmin=0, vmax=1)
 ```
+![](/images/broadcasting/pb2_2.png)
 
 Now let us compare this array to the first value of `l`:
 
@@ -155,6 +164,7 @@ up_tri = x.unsqueeze(0) > (1-l).unsqueeze(1)
 
 plt.imshow(down_tri, cmap="Blues", vmin=0, vmax=1)
 ```
+![](/images/broadcasting/pb2_3.png)
 
 To be clear again, doing this expands under the hood the 1D array at the dimension where its size is 1, in order to perform element-wise comparisons.
 
@@ -171,6 +181,7 @@ plt.subplot(1, 3, 3)
 plt.imshow(down_tri, cmap="Blues", vmin=0, vmax=1)
 plt.title("$x > l$");
 ```
+![](/images/broadcasting/pb2_4.png)
 
 All what's remaining now is to perform a logical AND between `down_tri` and `up_tri`. For PyTorch tensors, this is done using the `&` symbol (`|` for OR).
 
@@ -178,6 +189,7 @@ All what's remaining now is to perform a logical AND between `down_tri` and `up_
 square = (x[None] > l.unsqueeze(1)) & (x[None] > (1-l).unsqueeze(1))
 plt.imshow(square, cmap="Blues", vmin=0, vmax=1)
 ```
+![](/images/broadcasting/pb2_5.png)
 
 Now, this figure looks a little coarse. By starting with `l` of size 1000, we obtain a much nicer rotated square in only 3 lines of code!
 
@@ -189,6 +201,7 @@ square = (x.unsqueeze(0) > l.unsqueeze(1)) & (x.unsqueeze(0) > (1-l).unsqueeze(1
 plt.imshow(square, cmap="Blues")
 plt.axis("off");
 ```
+![](/images/broadcasting/pb2_6.png)
 
 # Bonus 1: Drawing the Swiss flag
 
@@ -202,10 +215,12 @@ x = ((0.5 - (l - 0.5).abs()) * (6+7+6+7+6)).ceil() // 7
 ```python
 plt.imshow(x.unsqueeze(0).repeat(5, 1), vmin=0, vmax=4)
 ```
+![](/images/broadcasting/bn1_1.png)
 
 ```python
 plt.imshow(x.unsqueeze(0) + x.unsqueeze(1), vmin=0, vmax=4)
 ```
+![](/images/broadcasting/bn1_2.png)
 
 ```python
 l = torch.linspace(0, 1, 6+7+6+7+6)
@@ -215,6 +230,7 @@ flag = (x.unsqueeze(0) + x.unsqueeze(1)) > 2
 plt.imshow(flag, cmap=matplotlib.colors.ListedColormap([(1, 0, 0), (1,)*3]))
 plt.axis("off");
 ```
+![](/images/broadcasting/bn1_3.png)
 
 # Bonus 2: Drawing a Xmas gift
 
@@ -226,3 +242,4 @@ plt.imshow(1 - (x.unsqueeze(0) | y.unsqueeze(1)),
            cmap="winter")
 plt.axis("off");
 ```
+![](/images/broadcasting/bn2.png)
