@@ -1,5 +1,5 @@
 ---
-layout: project
+layout: post
 title: Autogradlib
 author: Alexandre Carlier
 image: thumbnail.jpg
@@ -23,6 +23,7 @@ priority: 300
 </style>
 
 In this project, I built a small deep learning framework called **Autogradlib** using only PyTorch's `Tensor` operations and the standard math library. The autograd mechanism and the high-level syntax are inspired by PyTorch.
+Code is available here: <https://github.com/alexandre01/autogradlib>.
 
 Autogradlib builds a gradient operations directed acyclic graph (DAG) on the fly, which enables to perform efficiently the backprop algorithm and to draw the associated graph using `graphviz` (see next figure).
 
