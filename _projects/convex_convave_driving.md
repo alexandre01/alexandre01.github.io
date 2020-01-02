@@ -7,7 +7,7 @@ show_image: false
 github: ConvexConcaveDriving
 report: convex_convave_driving.pdf
 priority: 400
-visible: true
+visible: false
 ---
 
 <style>
