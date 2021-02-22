@@ -2,7 +2,7 @@
 layout: post
 title: C++ and CUDA extensions in PyTorch
 author: Alexandre Carlier
-image: pytorch.png
+image: cuda.jpg
 show_image: false
 priority: 400
 ---
